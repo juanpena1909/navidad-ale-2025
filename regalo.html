@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Navidad Peque!</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Iconos -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Tipografías */
+        .font-handwriting {
+            font-family: 'Great Vibes', cursive;
+        }
+        .font-body {
+            font-family: 'Lora', serif;
+        }
+
+        /* Fondo Animado Navideño */
+        body {
+            background: radial-gradient(circle at center, #1a472a, #0f2b19);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Nieve */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            font-family: Arial;
+            text-shadow: 0 0 1px #000;
+            z-index: 1;
+            user-select: none;
+            cursor: default;
+            animation-name: snowflakes-fall, snowflakes-shake;
+            animation-duration: 10s, 3s;
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: infinite, infinite;
+            animation-play-state: running, running;
+        }
+
+        @keyframes snowflakes-fall {
+            0% { top: -10%; }
+            100% { top: 100%; }
+        }
+        @keyframes snowflakes-shake {
+            0% { transform: translateX(0px); }
+            50% { transform: translateX(80px); }
+            100% { transform: translateX(0px); }
+        }
+
+        /* Estilo Polaroid */
+        .polaroid {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, z-index 0.3s;
+            z-index: 10;
+        }
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 50;
+            cursor: pointer;
+        }
+        .polaroid img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            aspect-ratio: 3/4;
+            background-color: #eee;
+        }
+
+        /* Tarjeta de Texto */
+        .letter-card {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)),
+                url('https://www.transparenttextures.com/patterns/paper.png');
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 2px solid #d4af37; /* Dorado */
+            position: relative;
+            z-index: 20;
+        }
+        
+        .letter-card::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid #d4af37;
+            pointer-events: none;
+        }
+
+        /* Luces decorativas arriba */
+        .lights {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 30;
+            pointer-events: none;
+        }
+        .light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #fff;
+            animation: glow 1s infinite alternate;
+            margin-top: -5px;
+            position: relative;
+        }
+        .light::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 10px;
+            background: #222;
+        }
+        .light:nth-child(odd) { background: #ff0000; animation-delay: 0.2s; box-shadow: 0 2px 10px #ff0000; }
+        .light:nth-child(even) { background: #00ff00; animation-delay: 0.5s; box-shadow: 0 2px 10px #00ff00; }
+        .light:nth-child(3n) { background: #ffd700; animation-delay: 0.8s; box-shadow: 0 2px 10px #ffd700; }
+
+        @keyframes glow {
+            from { opacity: 0.4; }
+            to { opacity: 1; transform: scale(1.1); }
+        }
+
+    </style>
+</head>
+<body class="flex items-center justify-center py-10 px-4 relative">
+
+    <!-- Luces Navideñas -->
+    <div class="lights">
+        <!-- Luces superiores -->
+        <div class="light"></div><div class="light"></div><div class="light"></div>
+        <div class="light"></div><div class="light"></div><div class="light"></div>
+        <div class="light"></div><div class="light"></div><div class="light"></div>
+        <div class="light"></div><div class="light"></div><div class="light"></div>
+        <div class="light hidden md:block"></div><div class="light hidden md:block"></div>
+    </div>
+
+    <!-- Contenedor de Nieve JS -->
+    <div id="snow-container"></div>
+
+    <!-- Contenedor Principal -->
+    <div class="relative w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center gap-8">
+
+        <!-- Columna Izquierda de Fotos (Visible solo en PC) -->
+        <div class="hidden lg:flex flex-col gap-8 w-1/4 pt-10">
+            <!-- Foto 1 -->
+            <div class="polaroid transform -rotate-6">
+                <img src="https://i.ibb.co/MxtrXSHc/1f21cf0a-f6f1-4c22-a438-b11d43779fcf.jpg" alt="Foto Pareja 1" onerror="this.onerror=null;this.src='https://placehold.co/300x400?text=Foto+1+Error';">
+                <div class="text-center mt-2 font-handwriting text-xl text-gray-700">Momentos mágicos</div>
+            </div>
+            <!-- Foto 2 -->
+            <div class="polaroid transform rotate-3 mt-4">
+                <img src="https://i.ibb.co/HDBchgXf/d5c72406-14b5-4006-aa43-a01a7e5ec187.jpg" alt="Foto Pareja 2" onerror="this.onerror=null;this.src='https://placehold.co/300x400?text=Foto+2+Error';">
+                <div class="text-center mt-2 font-handwriting text-xl text-gray-700">Tu sonrisa</div>
+            </div>
+        </div>
+
+        <!-- Carta Central -->
+        <div class="letter-card w-full lg:w-2/4 p-8 md:p-12 rounded-lg text-gray-800">
+            <!-- Icono Decorativo -->
+            <div class="text-center text-red-700 mb-4">
+                <i data-lucide="gift" class="w-12 h-12 mx-auto inline-block"></i>
+            </div>
+
+            <!-- Título -->
+            <h1 class="text-5xl md:text-6xl text-center font-handwriting text-red-800 mb-8 leading-tight">
+                ¡Feliz Navidad peque!
+            </h1>
+
+            <!-- Cuerpo del Texto -->
+            <div class="font-body text-lg leading-relaxed space-y-6 text-justify">
+                <p>
+                    Creo que está de más decir que ha sido un año con altos y bajos, y francamente demasiadas sorpresas jajaja, pero también ha traído más alegrías de las que he podido contar, tú me las has regalado.
+                </p>
+
+                <!-- Foto visible solo en MÓVIL (entre párrafos) -->
+                <div class="lg:hidden polaroid transform rotate-2 max-w-xs mx-auto my-6">
+                    <img src="https://i.ibb.co/q3TJLPcj/IMG-5328.jpg" alt="Foto Móvil" onerror="this.onerror=null;this.src='https://placehold.co/300x400?text=Foto+Movil+Error';">
+                </div>
+
+                <p>
+                    Quizá no he podido estar tan cerca de ti como me hubiera gustado pero sólo físicamente porque te he llevado conmigo cada día en mis alegrías, sueños, oraciones e ilusiones. Me has regalado miles de sonrisas este año con solo ver tu foto o pensar en ti, me has regalado tantas fuerzas en los momentos en los que sentía que los retos me superaban, me has regalado miles de sueños que voy a hacer realidad a tu lado.
+                </p>
+                <p>
+                    Todo lo mío peque yo te lo entrego, es tuyo, mis sentimientos, mis fuerzas, mis ilusiones y mis metas, te los regalo para que vuelvas realidad cada uno de tus objetivos y sueños y pueda brillar como nunca y no volver a dejar de sonreír. Verte feliz es el mayor regalo y el mayor don y la mayor bendición para mí.
+                </p>
+            </div>
+
+            <!-- Firma -->
+            <div class="mt-12 text-center">
+                <p class="font-body italic text-gray-600 mb-2">Tuyo en esta vida, la próxima y todas las que vengas,</p>
+                <p class="font-handwriting text-5xl text-red-800 mt-4">Juandi</p>
+            </div>
+        </div>
+        
+        <!-- Columna Derecha de Fotos (Visible solo en PC) -->
+        <div class="hidden lg:flex flex-col gap-8 w-1/4 pt-20">
+            <!-- Foto 3 -->
+            <div class="polaroid transform rotate-6">
+                <img src="https://i.ibb.co/r2ghsqTT/IMG-6140.jpg" alt="Foto Pareja 3" onerror="this.onerror=null;this.src='https://placehold.co/300x400?text=Foto+3+Error';">
+                <div class="text-center mt-2 font-handwriting text-xl text-gray-700">Juntos siempre</div>
+            </div>
+            <!-- Foto 4 -->
+            <div class="polaroid transform -rotate-3 mt-4">
+                <img src="https://i.ibb.co/5Wj2Gjh3/IMG-4501.jpg" alt="Foto Pareja 4" onerror="this.onerror=null;this.src='https://placehold.co/300x400?text=Foto+4+Error';">
+                <div class="text-center mt-2 font-handwriting text-xl text-gray-700">Eres mi corazón</div>
+            </div>
+        </div>
+
+        <!-- Fotos extra para móvil (al final) -->
+        <div class="lg:hidden flex flex-col gap-6 w-full items-center mt-6">
+             <div class="polaroid transform -rotate-2 max-w-xs">
+                <img src="https://i.ibb.co/0p0Svnc0/GPTemp-Download.jpg" alt="Foto Móvil 2" onerror="this.onerror=null;this.src='https://placehold.co/300x400?text=Foto+Movil+2+Error';">
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Inicializar Iconos
+        lucide.createIcons();
+
+        // Generar Copos de Nieve
+        function createSnowflakes() {
+            const container = document.getElementById('snow-container');
+            const snowflakeCount = 50;
+            const characters = ['❄', '❅', '❆', '•'];
+
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = characters[Math.floor(Math.random() * characters.length)];
+                
+                // Aleatoriedad
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = (Math.random() * 5 + 5) + 's, ' + (Math.random() * 2 + 1) + 's';
+                snowflake.style.fontSize = (Math.random() * 1.5 + 0.5) + 'em';
+                snowflake.style.opacity = Math.random();
+                snowflake.style.animationDelay = Math.random() * 5 + 's, ' + Math.random() + 's';
+                
+                container.appendChild(snowflake);
+            }
+        }
+
+        // Iniciar nieve al cargar
+        window.addEventListener('load', createSnowflakes);
+    </script>
+</body>
+</html>
